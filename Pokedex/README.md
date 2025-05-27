@@ -14,9 +14,14 @@ yarn instal
 npm i -g @nestjs/cli
 ```
 
-4. Lrvantar la bd mongo
+4. Levantar la bd mongo
 ```
 docker-compose up-d
+```
+
+5. Reconstruir la bd con la semilla
+```
+localhost:3000/api/v2/seed
 ```
 
 
