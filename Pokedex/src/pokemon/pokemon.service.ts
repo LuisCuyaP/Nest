@@ -15,7 +15,9 @@ export class PokemonService {
     @InjectModel( Pokemon.name )
     private readonly pokemonModel: Model<Pokemon>,
 
-  ) {}
+  ) {
+    console.log(process.env.DEFAULT_LIMIT);
+  }
 
 
   async create(createPokemonDto: CreatePokemonDto) {
