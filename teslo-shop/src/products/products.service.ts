@@ -38,12 +38,11 @@ export class ProductsService {
   }
 
   findAll() {
-    const products = this.productRepository.find();
-    return products;
+    return this.productRepository.find({});    
   }
 
-  findOne(id: string) {
-    const product = this.productRepository.findOneBy({ id });
+  async findOne(id: string) {
+    const product = await this.productRepository.findOneBy({ id });
     if (!product) {
       throw new InternalServerErrorException(`Product with id ${id} not found`);
     }
@@ -54,8 +53,9 @@ export class ProductsService {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return this.productRepository.delete(id)
+  async remove(id: string) {
+    const product = await this.findOne(id);
+    return await this.productRepository.remove(product)
   }
 
   private handleDBExceptions(error: any) {
