@@ -19,18 +19,6 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto) {
     try {
-/*       if(!createProductDto.slug) {
-        createProductDto.slug = createProductDto.title
-          .toLowerCase()
-          .replaceAll(' ','_')
-          .replaceAll("'", '');
-      }else{
-        createProductDto.slug = createProductDto.slug
-          .toLowerCase()
-          .replaceAll(' ','_')
-          .replaceAll("'", '');
-      } */
-
       const product = this.productRepository.create(createProductDto);
       await this.productRepository.save(product);
       return product;
@@ -52,7 +40,13 @@ export class ProductsService {
     if (isUUID(term)) {
       product = await this.productRepository.findOneBy({ id:term });
     } else {
-      product = await this.productRepository.findOneBy({ slug: term });
+      const queryBuilder = this.productRepository.createQueryBuilder();
+      product = await queryBuilder
+        .where('LOWER(title) =:title OR slug =:slug', {
+          title: term.toLowerCase(),
+          slug: term.toLowerCase()
+        })
+        .getOne();      
     }
     
     if (!product) {
