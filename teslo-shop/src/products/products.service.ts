@@ -38,11 +38,16 @@ export class ProductsService {
   }
 
   findAll() {
-    return `This action returns all products`;
+    const products = this.productRepository.find();
+    return products;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  findOne(id: string) {
+    const product = this.productRepository.findOneBy({ id });
+    if (!product) {
+      throw new InternalServerErrorException(`Product with id ${id} not found`);
+    }
+    return product;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
@@ -50,7 +55,7 @@ export class ProductsService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} product`;
+    return this.productRepository.delete(id)
   }
 
   private handleDBExceptions(error: any) {
