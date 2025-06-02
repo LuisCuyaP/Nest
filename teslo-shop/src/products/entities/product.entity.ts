@@ -54,7 +54,7 @@ export class Product {
     @OneToMany(
         () => ProductImage, // referencia a la entidad ProductImage
         (productImage) => productImage.product, // propiedad de la entidad ProductImage que hace referencia al producto
-        { cascade: true } // cascade: true permite que las operaciones se propaguen a las imágenes asociadas para poder eliminarlas
+        { cascade: true, eager: true } // cascade: true permite que las operaciones se propaguen a las imágenes asociadas para poder eliminarlas
     )
     images?: ProductImage[];
 

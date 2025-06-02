@@ -35,15 +35,19 @@ export class ProductsService {
     }
   }
 
-  findAll(paginationDto: PaginationDto) {
+  async findAll(paginationDto: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDto;
-    return this.productRepository.find({
+    const products = await this.productRepository.find({
       take: limit,
       skip: offset,      
       relations: {
         images: true // Esto carga las imágenes asociadas al product
       }
     });    
+    return products.map(product => ({
+      ...product,
+      images: product.images!.map(img => img.url) // Solo devolver las URLs de las imágenes
+    }));
   }
 
   async findOne(term: string) {
@@ -51,12 +55,13 @@ export class ProductsService {
     if (isUUID(term)) {
       product = await this.productRepository.findOneBy({ id:term });
     } else {
-      const queryBuilder = this.productRepository.createQueryBuilder();
+      const queryBuilder = this.productRepository.createQueryBuilder('prod');
       product = await queryBuilder
         .where('LOWER(title) =:title OR slug =:slug', {
           title: term.toLowerCase(),
           slug: term.toLowerCase()
         })
+        .leftJoinAndSelect('prod.images', 'prodImages') // Cargar las imágenes asociadas
         .getOne();      
     }
     
@@ -64,6 +69,14 @@ export class ProductsService {
       throw new InternalServerErrorException(`Product with id ${term} not found`);
     }
     return product;
+  }
+
+  async findOnePlain(term: string) {
+    const { images = [], ...rest } = await this.findOne(term);
+    return {
+      ...rest,
+      images: images!.map(img => img.url) // Solo devolver las URLs de las imágenes
+    };
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
