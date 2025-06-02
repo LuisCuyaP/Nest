@@ -1,4 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ProductImage } from './product-image.entity';
 
 @Entity()
 export class Product {
@@ -48,6 +49,15 @@ export class Product {
     tags: string[];
 
     // images
+    //un proucto puede tener muchas imagenes
+    //relacion uno a muchos
+    @OneToMany(
+        () => ProductImage, // referencia a la entidad ProductImage
+        (productImage) => productImage.product, // propiedad de la entidad ProductImage que hace referencia al producto
+        { cascade: true } // cascade: true permite que las operaciones se propaguen a las imágenes asociadas para poder eliminarlas
+    )
+    images?: ProductImage;
+
 
     @BeforeInsert()
     checkSlugInsert() {
