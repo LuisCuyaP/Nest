@@ -56,7 +56,7 @@ export class Product {
         (productImage) => productImage.product, // propiedad de la entidad ProductImage que hace referencia al producto
         { cascade: true } // cascade: true permite que las operaciones se propaguen a las imágenes asociadas para poder eliminarlas
     )
-    images?: ProductImage;
+    images?: ProductImage[];
 
 
     @BeforeInsert()
