@@ -105,7 +105,7 @@ export class ProductsService {
         //crear las nuevas imagenes
         product.images = images.map(image => this.productImageRepository.create({ url: image }));
       }
-      
+
       await queryRunner.manager.save(product);
       await queryRunner.commitTransaction();
       await queryRunner.release();
@@ -129,5 +129,17 @@ export class ProductsService {
     }
     this.logger.error(error);
     throw new InternalServerErrorException('Unexpected error, check server logs');
+  }
+
+  async deleteAllProducts() {
+    const query = this.productRepository.createQueryBuilder('product');
+    try {
+      return await query
+        .delete()
+        .where({})
+        .execute();
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 }
