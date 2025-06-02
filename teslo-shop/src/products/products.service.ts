@@ -40,6 +40,9 @@ export class ProductsService {
     return this.productRepository.find({
       take: limit,
       skip: offset,      
+      relations: {
+        images: true // Esto carga las imágenes asociadas al product
+      }
     });    
   }
 
