@@ -43,7 +43,8 @@ export class AuthService {
       where : { email },
       select: { 
         email: true,
-        password: true
+        password: true,
+        id: true,
       }
     });
 
