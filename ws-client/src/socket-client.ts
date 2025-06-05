@@ -19,6 +19,7 @@ const addListener = (socket: Socket) => {
     const clientsUl = document.querySelector('#clients-ul')!;
     const messageForm = document.querySelector<HTMLFormElement>('#message-form')!;
     const messageInput = document.querySelector<HTMLInputElement>('#message-input')!;
+    const messagesUl = document.querySelector<HTMLUListElement>('#messages-ul')!;
 
 
     //on = escuchar informacion del servidor
@@ -32,6 +33,7 @@ const addListener = (socket: Socket) => {
         console.log('Disconnected to WebSocket server');
     });
 
+    //on => escuchar al servidor
     //total de clientes conectados desde el front, este evento viene desde el back
     //cada vez que un cliente nuevo se conecta, el back desde handleConnection dispara ese evento de this.wss.emit.....
     //y el front lo escuchara cuando dispare ese evento y recibira el getConnectedClients que viene del back
@@ -52,10 +54,20 @@ const addListener = (socket: Socket) => {
         const message = messageInput.value.trim();
         if (message.length <= 0) return; // No enviar mensajes vacíos
 
-        socket.emit('message-from-client', { id: 'YOOO', message });
+        socket.emit('message-from-client2', { id: 'YOOO', message });
         console.log({ id: 'YOOO', message: messageInput.value });
         
         // Limpiar el campo de entrada
         messageInput.value = '';
     });
+
+
+    //on => escuchar al servidor
+    socket.on('message-from-server', ( payload: { fullName: string, message: string  }) => {
+        console.log('Message from server:', payload);
+       
+    });
+
+
+
 }

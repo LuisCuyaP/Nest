@@ -31,9 +31,17 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
   @SubscribeMessage('message-from-client')
   handleMessageFromClient(client: Socket, payload: NewMessageDto) {
     console.log('Message from client:', client.id, payload);
-    //aqui puedo hacer lo que quiera con el mensaje, guardarlo en la base de datos, etc.
-    //en este caso solo lo voy a emitir a todos los clientes conectados
-    //this.wss.emit('message-from-server', payload);
+  }
+
+  @SubscribeMessage('message-from-client2')
+  handleMessageFromClient2(client: Socket, payload: NewMessageDto) {
+    console.log('Message from client:', client.id, payload);
+
+    // Emitir un mensaje a solo un cliente conectado
+    client.emit('message-from-server', {
+      fullName: 'Soy Yo!',
+      message: payload.message || 'No message provided'
+    });
   }
 
 }
