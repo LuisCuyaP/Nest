@@ -7,4 +7,22 @@ export const connectToServer = () => {
 
     const socket = manager.socket('/');
 
+    addListener(socket);
+
+}
+
+//eventos que voy a estar escuchando y emitiendo
+const addListener = (socket: Socket) => {
+    const serverStatusLabel = document.querySelector('#server-status')!;
+
+    //on = escuchar informacion del servidor
+    socket.on('connect', () => {
+        serverStatusLabel.innerHTML = 'connected';
+        console.log('Connected to WebSocket server');
+    });
+
+    socket.on('disconnect', () => {
+        serverStatusLabel.innerHTML = 'disconnected';
+        console.log('Disconnected to WebSocket server');
+    });
 }
