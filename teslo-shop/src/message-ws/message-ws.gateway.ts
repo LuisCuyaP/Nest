@@ -1,7 +1,20 @@
-import { WebSocketGateway } from '@nestjs/websockets';
-import { MessageWsService } from './message-ws.service';
+import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
+import { Socket } from "socket.io";
+import { MessageWsService } from "./message-ws.service";
 
-@WebSocketGateway()
-export class MessageWsGateway {
-  constructor(private readonly messageWsService: MessageWsService) {}
+@WebSocketGateway({cors: true})
+export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  
+  constructor(
+    private readonly messageWsService: MessageWsService
+  ) {}
+
+  handleConnection(client: Socket) {
+    console.log('Client connected:', client.id);
+  }
+  
+  handleDisconnect(client: Socket) {
+    console.log('Client disconnected:', client.id);
+  }
+
 }
