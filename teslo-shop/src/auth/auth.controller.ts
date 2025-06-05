@@ -9,6 +9,7 @@ import { IncomingHttpHeaders } from 'http';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
 import { RoleProtected } from './decorators/role-protected.decorator';
 import { ValidRoles } from './interfaces';
+import { Auth } from './decorators/auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -47,11 +48,24 @@ export class AuthController {
     }
   }
 
+  // private2 y private 3,  donde el primero tiene mas codigo y el segundo esta optimizado todo dentro de @Auth
+
   @Get('private2')
   //@SetMetadata( 'roles', [ 'admin', 'super-user' ] )
   @RoleProtected(ValidRoles.admin, ValidRoles.superUser, ValidRoles.user)
   @UseGuards( AuthGuard(), UserRoleGuard )
   privateRoute2(
+    @GetUser() user: User
+  ) {
+    return {
+      ok: true,
+      user
+    }
+  }
+
+  @Get('private3')
+  @Auth( ValidRoles.admin )
+  privateRoute3(
     @GetUser() user: User
   ) {
 
