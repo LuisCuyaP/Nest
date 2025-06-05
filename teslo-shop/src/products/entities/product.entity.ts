@@ -6,48 +6,77 @@ import { ApiProperty } from '@nestjs/swagger';
 @Entity({ name: 'products' })
 export class Product {
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 'd3b9f8c0-4c1e-4f2a-8b5e-6f7c8d9e0a1b',
+        description: 'Product ID',
+        uniqueItems: true,
+    })
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 'T-Shit Teslo',
+        description: 'Product Title',
+        uniqueItems: true,
+    })
     @Column('text', {
         unique: true,
     })
     title: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 0,
+        description: 'Product Price',
+    })
     @Column('float',{
         default: 0
     })
     price: number;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 'Anim reprehenderit nulla in anim mollit minim irure commodo.',
+        description: 'Product Description',
+        default: null,
+    })
     @Column({
         type: 'text',
         nullable: true
     })
     description: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 'T-Shit Teslo',
+        description: 'Product SLUG - for SEO',
+        uniqueItems: true,
+    })
     @Column('text', {
         unique: true
     })
     slug: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 10,
+        description: 'Product Stock',
+        default: true,
+    })
     @Column('int', {
         default: 0
     })
     stock: number;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: ['M', 'XL', 'XXL'],
+        description: 'Product Sizes',
+    })
     @Column('text',{
         array: true
     })
     sizes: string[];
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 'Women',
+        description: 'Product Gender',
+    })
     @Column('text')
     gender: string;
 
