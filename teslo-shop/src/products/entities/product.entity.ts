@@ -1,5 +1,6 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ProductImage } from './product-image.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -49,7 +50,7 @@ export class Product {
     tags: string[];
 
     // images
-    //un proucto puede tener muchas imagenes
+    //un producto puede tener muchas imagenes
     //relacion uno a muchos
     @OneToMany(
         () => ProductImage, // referencia a la entidad ProductImage
@@ -57,6 +58,16 @@ export class Product {
         { cascade: true, eager: true } // cascade: true permite que las operaciones se propaguen a las imágenes asociadas para poder eliminarlas
     )
     images?: ProductImage[];
+
+
+    //muchos productos va a tener un usuario
+    //en esta tabla se almacenara el new column id del usuario que creo el producto
+    @ManyToOne(
+        () => User, // referencia a la entidad User
+        (user) => user.product, // propiedad de la entidad User que hace referencia a los productos
+        { eager: true } // eager: true permite que el usuario asociado se cargue automáticamente al consultar el producto
+    )
+    user: User;
 
 
     @BeforeInsert()
