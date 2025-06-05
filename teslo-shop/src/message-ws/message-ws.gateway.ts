@@ -13,7 +13,13 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
   ) {}
 
   handleConnection(client: Socket) {
-    //console.log('Client connected:', client.id);
+    //client => viene del front exactamente desde connectToServer en socket client.ts
+    //console.log('Client connected:', client);
+
+    const token = client.handshake.headers.authentication as string;
+    const hola = client.handshake.headers.hola as string;
+    console.log('extraHeaders', token, hola);
+
     this.messageWsService.registerClient(client);
     //console.log({conectados: this.messageWsService.getConnectedClients()});
   
