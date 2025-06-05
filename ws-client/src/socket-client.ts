@@ -13,8 +13,13 @@ export const connectToServer = () => {
 
 //eventos que voy a estar escuchando y emitiendo
 const addListener = (socket: Socket) => {
+
+    //definir elementos del DOM que viene del html en main.ts
     const serverStatusLabel = document.querySelector('#server-status')!;
     const clientsUl = document.querySelector('#clients-ul')!;
+    const messageForm = document.querySelector<HTMLFormElement>('#message-form')!;
+    const messageInput = document.querySelector<HTMLInputElement>('#message-input')!;
+
 
     //on = escuchar informacion del servidor
     socket.on('connect', () => {
@@ -38,4 +43,19 @@ const addListener = (socket: Socket) => {
        });
        clientsUl.innerHTML = clientHtml;
     })
+
+    //escuchar el evento del input en el formulario, apretar enter en la caja de texto
+    //este es el evento que quiero enviar al servidor
+    messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const message = messageInput.value.trim();
+        if (message.length <= 0) return; // No enviar mensajes vacíos
+
+        socket.emit('message-from-client', { id: 'YOOO', message });
+        console.log({ id: 'YOOO', message: messageInput.value });
+        
+        // Limpiar el campo de entrada
+        messageInput.value = '';
+    });
 }
