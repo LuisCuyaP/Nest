@@ -2,6 +2,8 @@ import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGa
 import { Server, Socket } from "socket.io";
 import { MessageWsService } from "./message-ws.service";
 import { NewMessageDto } from "./dtos/new-message.dto";
+import { JwtService } from "@nestjs/jwt";
+import { JwtPayload } from "src/auth/interfaces";
 
 @WebSocketGateway({cors: true})
 export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -9,16 +11,33 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
   @WebSocketServer() wss: Server;
 
   constructor(
-    private readonly messageWsService: MessageWsService
+    private readonly messageWsService: MessageWsService,
+    private readonly jwtService: JwtService
   ) {}
 
   handleConnection(client: Socket) {
     //client => viene del front exactamente desde connectToServer en socket client.ts
     //console.log('Client connected:', client);
 
+
+    //viene del connectToServer en el front
     const token = client.handshake.headers.authentication as string;
-    const hola = client.handshake.headers.hola as string;
-    console.log('extraHeaders', token, hola);
+    //const hola = client.handshake.headers.hola as string;
+    //console.log('extraHeaders', token, hola);
+
+
+    //validar token
+    let payload: JwtPayload;
+    try {
+      payload = this.jwtService.verify(token);
+      //console.log('Payload:', payload);
+    } catch (error) {
+      console.error('Invalid token:', error);
+      client.disconnect(); // Desconectar al cliente si el token es inválido
+      return;
+    }
+    console.log({payload});
+
 
     this.messageWsService.registerClient(client);
     //console.log({conectados: this.messageWsService.getConnectedClients()});
