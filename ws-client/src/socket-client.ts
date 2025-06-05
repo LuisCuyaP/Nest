@@ -64,8 +64,15 @@ const addListener = (socket: Socket) => {
 
     //on => escuchar al servidor
     socket.on('message-from-server', ( payload: { fullName: string, message: string  }) => {
-        console.log('Message from server:', payload);
-       
+        const newMessage = `
+        <li>
+            <strong>${ payload.fullName }</strong>
+            <span>${ payload.message }</span>
+        </li>
+        `
+       const li = document.createElement('li');
+       li.innerHTML = newMessage;
+       messagesUl.append(li);
     });
 
 
