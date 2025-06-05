@@ -7,6 +7,8 @@ import { User } from './entities/user.entity';
 import { RawHeaders } from './decorators/raw-headers.decorator';
 import { IncomingHttpHeaders } from 'http';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
+import { RoleProtected } from './decorators/role-protected.decorator';
+import { ValidRoles } from './interfaces';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +32,6 @@ export class AuthController {
     @Req() request: Express.Request,
     @GetUser() user: User,
     @GetUser('email') userEmail: string,
-    
     @RawHeaders() rawHeaders: string[],
     //@Headers() headers: IncomingHttpHeaders,
   ) {
@@ -47,7 +48,8 @@ export class AuthController {
   }
 
   @Get('private2')
-  @SetMetadata( 'roles', [ 'admin', 'super-user' ] )
+  //@SetMetadata( 'roles', [ 'admin', 'super-user' ] )
+  @RoleProtected(ValidRoles.admin, ValidRoles.superUser, ValidRoles.user)
   @UseGuards( AuthGuard(), UserRoleGuard )
   privateRoute2(
     @GetUser() user: User
