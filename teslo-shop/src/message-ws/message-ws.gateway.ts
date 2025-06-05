@@ -44,7 +44,13 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
     }); */
 
     //emite el mensahe a todos menos al cliente que lo envio
-    client.broadcast.emit('message-from-server', {
+/*     client.broadcast.emit('message-from-server', {
+      fullName: 'Soy Yo!',
+      message: payload.message || 'No message provided'
+    });
+ */
+    //emite a todos los clientes conectados en el front
+    this.wss.emit('message-from-server', {
       fullName: 'Soy Yo!',
       message: payload.message || 'No message provided'
     });
