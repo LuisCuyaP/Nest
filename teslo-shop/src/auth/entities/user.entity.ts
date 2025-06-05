@@ -36,7 +36,6 @@ export class User {
     @OneToMany(
         () => Product, // referencia a la entidad Product
         (product) => product.user, // propiedad de la entidad Product que hace referencia al usuario
-        { eager: true } // eager: true permite que los productos asociados se carguen automáticamente al consultar el usuario
     )
     product: Product
 
