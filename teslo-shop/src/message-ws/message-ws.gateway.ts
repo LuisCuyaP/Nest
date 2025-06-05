@@ -38,7 +38,13 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
     console.log('Message from client:', client.id, payload);
 
     // Emitir un mensaje a solo un cliente conectado
-    client.emit('message-from-server', {
+/*     client.emit('message-from-server', {
+      fullName: 'Soy Yo!',
+      message: payload.message || 'No message provided'
+    }); */
+
+    //emite el mensahe a todos menos al cliente que lo envio
+    client.broadcast.emit('message-from-server', {
       fullName: 'Soy Yo!',
       message: payload.message || 'No message provided'
     });
