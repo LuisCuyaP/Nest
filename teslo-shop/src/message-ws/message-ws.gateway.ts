@@ -15,7 +15,7 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
     private readonly jwtService: JwtService
   ) {}
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
     //client => viene del front exactamente desde connectToServer en socket client.ts
     //console.log('Client connected:', client);
 
@@ -30,6 +30,7 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
     let payload: JwtPayload;
     try {
       payload = this.jwtService.verify(token);
+      await this.messageWsService.registerClient(client, payload.id);
       //console.log('Payload:', payload);
     } catch (error) {
       console.error('Invalid token:', error);
@@ -38,8 +39,6 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
     }
     console.log({payload});
 
-
-    this.messageWsService.registerClient(client);
     //console.log({conectados: this.messageWsService.getConnectedClients()});
   
     //nuevos clientes
@@ -76,7 +75,7 @@ export class MessageWsGateway implements OnGatewayConnection, OnGatewayDisconnec
  */
     //emite a todos los clientes conectados en el front
     this.wss.emit('message-from-server', {
-      fullName: 'Soy Yo!',
+      fullName: this.messageWsService.getUserFullName(client.id),
       message: payload.message || 'No message provided'
     });
   }
