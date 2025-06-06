@@ -31,5 +31,6 @@ const btnConnect = document.querySelector<HTMLButtonElement>('#btn-connect')!;
 
 btnConnect.addEventListener('click', () => {
   if( jwtToken.value.trim().length <= 0 ) return alert('JWT Token is required');
+  //aqui inicia todo el flujo desde el front al back
   connectToServer(jwtToken.value.trim());
 });

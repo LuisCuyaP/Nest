@@ -1,5 +1,6 @@
 import { Manager, Socket } from 'socket.io-client';
 
+let socket: Socket;
 
 export const connectToServer = (token: string) => {
 
@@ -10,14 +11,18 @@ export const connectToServer = (token: string) => {
         }
     });
 
-    const socket = manager.socket('/');
+    //socket?  => si el socket no es null ni undefined, entonces elimina los listeners anteriores
+    socket?.removeAllListeners(); // Eliminar todos los listeners previos para evitar duplicados
+    socket = manager.socket('/');
 
-    addListener(socket);
+    
+    //los listeners son los socket on connect, socket on disconnect, socket on clientsUpdated, etc
+    addListener();
 
 }
 
 //eventos que voy a estar escuchando y emitiendo
-const addListener = (socket: Socket) => {
+const addListener = () => {
 
     //definir elementos del DOM que viene del html en main.ts
     const serverStatusLabel = document.querySelector('#server-status')!;
